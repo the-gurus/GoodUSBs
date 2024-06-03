@@ -1,0 +1,260 @@
+REM Title: The Opticon (Windows Edition)
+REM Author: PDX I.T. Gurus; wino_willy
+REM Description: A payload that creates a batch file that the user 
+REM     can run anytime their machine feels slow and sluggish.
+REM Target: Windows Machines
+DELAY 1000
+GUI r
+DELAY 1000
+STRING notepad
+DELAY 1000
+ENTER
+DELAY 1500
+
+REM Flashy Entrance
+STRINGLN @echo off
+STRINGLN echo .
+STRINGLN echo -===========PDX I.T. Gurus: The Opticon!===========-
+STRINGLN echo .              -==Windows Edition==-
+STRINGLN echo -===========Starting System Optimization===========-
+
+REM Clean Things Up
+STRINGLN echo .
+STRINGLN echo -==Running Disk Cleanup==-
+STRINGLN echo -==May take 5-30 Minutes==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN cleanmgr /sagerun:1
+STRINGLN echo -==Disk Cleanup Complete==-
+STRINGLN echo .
+
+REM System File Check
+STRINGLN echo .
+STRINGLN echo -==Running System File Checker==-
+STRINGLN echo -==This may take 10-20 Minutes==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN sfc /scannow
+STRINGLN echo .
+STRINGLN echo -==System File Check Complete==-
+STRINGLN echo .
+
+REM Run the DISM Tool
+STRINGLN echo .
+STRINGLN echo -==Running DISM Tool==-
+STRINGLN echo -==May take 10-13 Minutes==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN DISM /Online /Cleanup-Image /RestoreHealth
+STRINGLN echo .
+STRINGLN echo -==DISM Tool Finished==-
+STRINGLN echo .
+
+REM Defrag and Optimize
+STRINGLN echo .
+STRINGLN echo -==Starting Defragmentation & Optimization==-
+STRINGLN echo -==May take 10-30 Minutes==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN defrag C: /O
+STRINGLN echo . 
+STRINGLN echo -==Defrag and Optimization Complete==-
+STRINGLN echo .
+
+REM Disable Hibernation (Pesky hiberfil.sys)
+STRINGLN echo .
+STRINGLN echo -==Disabling Hibernation==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN powercfg -h off
+STRINGLN echo .
+STRINGLN echo -==Hibernation Disabled==-
+STRINGLN echo .
+
+REM Clear DNS Cache
+STRINGLN echo .
+STRINGLN echo -==Clearing the DNS Cache==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN ipconfig /flushdns
+STRINGLN echo . 
+STRINGLN echo -==DNS Flush Complete==-
+STRINGLN echo .
+
+REM Reset the Network
+STRINGLN echo .
+STRINGLN echo -==Restarting the Network==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN netsh int ip reset
+STRINGLN netsh winsock reset
+STRINGLN echo . 
+STRINGLN echo -==Network Reset Complete==-
+STRINGLN echo .
+
+REM Disable Superfetch
+STRINGLN echo .
+STRINGLN echo -==Disabling Superfetch==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN sc stop "SysMain"
+STRINGLN sc config "SysMain" start=disabled
+STRINGLN echo . 
+STRINGLN echo -==Superfetch Disabled==-
+STRINGLN echo .
+
+REM Disable Prefetcher
+STRINGLN echo .
+STRINGLN echo -==Disabling Prefetch==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f
+STRINGLN echo . 
+STRINGLN echo -==Prefetcher Disabled==-
+STRINGLN echo .
+
+
+
+REM Disable Indexing
+STRINGLN echo .
+STRINGLN echo -==Disabling Indexing==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN sc stop "WSearch"
+STRINGLN sc config "WSearch" start=disabled
+STRINGLN echo . 
+STRINGLN echo -==Indexing Disabled==-
+STRINGLN echo .
+
+REM Disable the Pagefile
+STRINGLN echo .
+STRINGLN echo -==Disabling the Pagefile==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN wmic computersystem where name="%computername%" set AutomaticManagedPagefile=False
+STRINGLN wmic pagefile list /format:list
+STRINGLN echo . 
+STRINGLN echo -==Pagefile Disabled==-
+STRINGLN echo .
+
+REM Clear Out Temp Files
+STRINGLN echo .
+STRINGLN echo -==Clearing the Temp Directories==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN del /q /s /f %temp%\*
+STRINGLN del /q /s /f C:\Windows\Temp\*
+STRINGLN echo . 
+STRINGLN echo -==Temp Directories Cleared==-
+STRINGLN echo .
+
+REM Memory Disgnostics
+STRINGLN echo .
+STRINGLN echo -==Running Memory Diagnostics==-
+STRINGLN echo -==Will take about 20 Minutes, upon next restart==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN mdsched.exe
+STRINGLN echo . 
+STRINGLN echo -==Memory Diagnostics Finished==-
+STRINGLN echo .
+
+REM Optimizing Power Plan
+STRINGLN echo .
+STRINGLN echo -==Optimizing the Power Plan==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN powercfg /setactive SCHEME_MIN
+STRINGLN echo . 
+STRINGLN echo -==Power Plan Optimized==-
+STRINGLN echo .
+
+REM Clear the Event Logs
+STRINGLN echo .
+STRINGLN echo -==Clearing the Event Logs==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN for /F "tokens=*" %1 in ('wevtutil.exe el') DO wevtutil.exe cl "%1"
+STRINGLN echo . 
+STRINGLN echo -==Event Logs Cleared==-
+STRINGLN echo .
+
+REM Disable Startup Programs
+STRINGLN echo .
+STRINGLN echo -==Disabling Startup Programs==-
+STRINGLN echo -==Instant for each program==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN wmic startup where "Caption='ProgramName'" call disable
+STRINGLN echo . 
+STRINGLN echo -==Startup Programs Disabled==-
+STRINGLN echo .
+
+REM Enable Fast Startup
+STRINGLN echo .
+STRINGLN echo -==Enabling Fast Startup==-
+STRINGLN echo -==Won't take long==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN powercfg -h on
+STRINGLN echo . 
+STRINGLN echo -==Fast Startup Enabled==-
+STRINGLN echo .
+
+REM Clean the Windows Component Store
+STRINGLN echo .
+STRINGLN echo -==Cleaning Windows Component Store==-
+STRINGLN echo -==May take 5-10 Minutes==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN Dism.exe /online /Cleanup-Image /StartComponentCleanup
+STRINGLN echo . 
+STRINGLN echo -==Memory Diagnostics Finished==-
+STRINGLN echo .
+
+REM Check the Disks
+STRINGLN echo .
+STRINGLN echo -==Running Disk Checker==-
+STRINGLN echo -=NOTE: This may take a long time=-
+STRINGLN echo -=NOTE: You may have to restart your machine=-
+STRINGLN echo -==May take 20 Minutes - 3 Hours==-
+STRINGLN echo .
+STRINGLN pause
+STRINGLN chkdsk /f /r
+STRINGLN echo .
+STRINGLN echo -==Disk Check Finished==-
+STRINGLN echo .
+STRINGLN echo -==Thank you for using the Opticon!==-
+STRINGLN echo -==PDX I.T. Gurus==-
+STRINGLN echo -== aaron@pdxitgurus.com ==-
+STRINGLN echo -== +1(503) 380-3934 ==-
+ENTER
+ENTER
+DELAY 1000 
+CTRL s
+DELAY 1000
+STRING RunMeWhenSlow.bat
+DELAY 1000
+ENTER
+DELAY 1000
+
+GUI r
+DELAY 1000
+STRING powershell
+DELAY 1000
+ENTER
+DELAY 1500
+STRING Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('There is a batch program named RunMeWhenSlow.bat here on your computer now. Simply run that program when it feels laggy.')
+DELAY 1000
+ENTER
+DELAY 5000
+REM That's all folks!

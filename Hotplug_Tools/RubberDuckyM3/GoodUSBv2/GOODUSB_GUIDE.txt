@@ -1,0 +1,179 @@
+Certainly! Below are lists of terminal/CMD commands categorized into two groups: performance improvement and security enhancement. These commands are designed to be executed one after another and require no user input once initiated. Keep in mind that while these commands can generally enhance performance and security, their effects may vary depending on system configuration and user requirements.
+
+### Windows:
+
+**Performance Improvement:**
+```batch
+:: Flush DNS cache
+ipconfig /flushdns
+
+:: Clear system cache
+systemctl start cachefilesd.service
+
+:: Disable unnecessary startup programs
+msconfig
+
+:: Defragment drives (if HDD)
+defrag C: /U /V /H
+
+:: Check disk for errors
+chkdsk C: /F /R
+
+:: Disable visual effects for better performance
+sysdm.cpl > Advanced > Performance Settings
+
+:: Update drivers
+Device Manager > Right-click on each device > Update Driver
+
+:: Adjust power settings for performance
+powercfg /setactive scheme_name
+
+:: Disable unnecessary services
+services.msc
+```
+
+**Security Enhancement:**
+```batch
+:: Enable Windows Firewall
+netsh advfirewall set allprofiles state on
+
+:: Enable Windows Defender
+Set-MpPreference -DisableRealtimeMonitoring $false
+
+:: Update Windows Defender definitions
+MpCmdRun.exe -SignatureUpdate
+
+:: Enable BitLocker (for data encryption)
+manage-bde -on C: -RecoveryPassword -UsedSpaceOnly
+
+:: Disable Remote Desktop (if not needed)
+systempropertiesremote
+
+:: Set strong password policies
+secpol.msc > Account Policies > Password Policy
+
+:: Enable User Account Control (UAC)
+secpol.msc > Local Policies > Security Options > User Account Control
+
+:: Enable Secure Boot (if supported)
+bcdedit /set {current} secureboot on
+
+:: Disable unused network protocols
+Control Panel > Network and Sharing Center > Change Adapter Settings
+```
+
+### macOS:
+
+**Performance Improvement:**
+```bash
+:: Clear DNS cache
+sudo killall -HUP mDNSResponder
+
+:: Clear system cache
+sudo purge
+
+:: Disable unnecessary startup programs
+System Preferences > Users & Groups > Login Items
+
+:: Repair disk permissions
+diskutil resetUserPermissions / `id -u`
+
+:: Disable visual effects for better performance
+System Preferences > Accessibility > Display > Reduce Motion
+
+:: Update macOS
+softwareupdate -i -a
+
+:: Reset NVRAM/PRAM
+sudo nvram -c
+
+:: Disable Spotlight indexing (if not needed)
+sudo mdutil -a -i off
+
+:: Monitor system activity
+Activity Monitor.app
+```
+
+**Security Enhancement:**
+```bash
+:: Enable Firewall
+sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
+
+:: Enable FileVault (for data encryption)
+sudo fdesetup enable
+
+:: Enable Gatekeeper
+sudo spctl --master-enable
+
+:: Set strong password policies
+System Preferences > Users & Groups > Change Password
+
+:: Enable System Integrity Protection (SIP)
+csrutil enable
+
+:: Disable Remote Login (SSH) if not used
+System Preferences > Sharing > Remote Login
+
+:: Enable automatic updates
+System Preferences > Software Update > Automatically keep my Mac up to date
+
+:: Disable unnecessary network services
+sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.*.plist
+```
+
+### Linux (Ubuntu):
+
+**Performance Improvement:**
+```bash
+:: Clear DNS cache
+sudo systemd-resolve --flush-caches
+
+:: Clear system cache
+sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
+
+:: Disable unnecessary startup services
+sudo systemctl disable service_name
+
+:: Update system packages
+sudo apt update && sudo apt upgrade -y
+
+:: Disable unnecessary services
+sudo systemctl stop service_name
+
+:: Adjust swappiness for better performance
+sudo sysctl vm.swappiness=10
+
+:: Monitor system activity
+gnome-system-monitor
+
+:: Update drivers (if needed)
+sudo ubuntu-drivers autoinstall
+```
+
+**Security Enhancement:**
+```bash
+:: Enable firewall (ufw)
+sudo ufw enable
+
+:: Enable automatic updates
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+
+:: Enable AppArmor
+sudo aa-enforce /etc/apparmor.d/*
+
+:: Disable root login via SSH
+sudo nano /etc/ssh/sshd_config
+PermitRootLogin no
+
+:: Set strong password policies
+sudo passwd -n 7 -x 30 -w 7
+
+:: Enable Two-Factor Authentication (2FA)
+sudo apt install libpam-google-authenticator
+
+:: Disable unused network services
+sudo systemctl disable service_name
+```
+
+Remember to execute these commands with caution, especially those related to security settings, as they may restrict system access or modify critical configurations. Always ensure you understand the implications of each command before running them, and consider backing up important data before making significant changes to your system.

@@ -1,0 +1,24 @@
+REM Title: Pass Pal
+REM Author: PDX I.T. Gurus, wino_willy
+REM Description: When prompted to enter a password on any text field,
+REM     simply plug in your RubberDucky and wait for the red LED to
+REM     pop up, Once it does press the BUTTON and a random 15 characters
+REM     will be entered. This ends the payload so the user can have a 
+REM     chance to write their password down.
+REM Target: Any Text Field
+
+DELAY 1000
+ATTACKMODE HID VID_03EB PID_2401 MAN_PDXITGURUS PROD_PassPal SERIAL_015033803934
+
+LED_R 
+WAIT_FOR_BUTTON_PRESS
+
+VAR $LENGTH = 0
+WHILE ($LENGTH < 20) 
+    RANDOM_CHARACTER
+    LED_OFF
+    DELAY 250
+    LED_G
+    $LENGTH = ($LENGTH + 1)
+END_WHILE
+
